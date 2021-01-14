@@ -20,7 +20,9 @@ class GeoJsons {
     let data
 
     if (!province) {
-      return res.status(RES.BAD_REQUEST).send()
+      return res.status(RES.BAD_REQUEST).send({
+        message: 'Invalid query parameter.'
+      })
     }
 
     try {
@@ -44,7 +46,9 @@ class GeoJsons {
         type: model.sequelize.QueryTypes.SELECT
       })
     } catch (err) {
-      return res.status(RES.INTERNAL_SERVER_ERROR).send()
+      return res.status(RES.INTERNAL_SERVER_ERROR).send({
+        message: err.message
+      })
     }
 
     // Additional GeoJSON returned by a WMS
