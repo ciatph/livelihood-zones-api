@@ -25,6 +25,7 @@ module.exports = {
     dialectOptions: {
       ssl: {
         require: true,
+        rejectUnauthorized: false,  // Temporary fix for breaking change in node-postgres v8
       },
     },
   }
