@@ -1,4 +1,5 @@
 'use strict'
+const { MAX_LENGTH } = require('../helpers/defines')
 const {
   Model
 } = require('sequelize')
@@ -17,7 +18,14 @@ module.exports = (sequelize, DataTypes) => {
     ogc_fid: DataTypes.INTEGER,
     wkb_geometry: DataTypes.GEOMETRY,
     adm3_en: DataTypes.STRING,
-    adm2_en: DataTypes.STRING,
+    adm2_en: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+        len: [1, MAX_LENGTH.PROVINCE]
+      }
+    },
     livelihood: DataTypes.STRING
   }, {
     sequelize,

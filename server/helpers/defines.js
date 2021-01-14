@@ -15,6 +15,11 @@ const RES = {
   GATEWAY_TIMEOUT: 504
 }
 
+const MAX_LENGTH = {
+  PROVINCE: 50,
+}
+
 module.exports = {
-  RES
+  RES,
+  MAX_LENGTH
 }
