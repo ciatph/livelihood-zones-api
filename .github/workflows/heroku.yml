@@ -3,7 +3,7 @@ name: Deploy to Heroku
 on:
   push:
     branches:
-      - api-documentation
+      - master
 
 jobs:
   deploy:
@@ -26,4 +26,4 @@ jobs:
             password $HEROKU_API_KEY
           EOF
       - run: heroku git:remote -a $HEROKU_APP
-      - run: git push heroku HEAD:refs/heads/api-documentation
+      - run: git push heroku HEAD:refs/heads/master
