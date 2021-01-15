@@ -35,7 +35,7 @@
     function get() {  
       output.innerText = ''
       axios.get(`${window.document.location.origin}/api/province`, {
-        params: { province: province.value }
+        params: { name: province.value }
       }).then(response => {
         output.innerText = JSON.stringify(response.data)
       }).catch(err => {
