@@ -1,0 +1,12 @@
+{
+  "name": "Livelihood Zones API",
+  "version": "1.0.0",
+  "description": "GeoJSON API for the livelihood zones map.",
+  "title": "Livelihood Zones API",
+  "url": "https://livelihood-zones-api.herokuapp.com/api",
+  "sampleUrl": "https://livelihood-zones-api.herokuapp.com/api",
+  "template": {
+    "withCompare": false,
+    "withFilter": false
+  }
+}

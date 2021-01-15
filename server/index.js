@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require('express')
 const path = require('path')
 const PORT = process.env.PORT || 3001
@@ -11,7 +12,7 @@ app.use(express.urlencoded({ extended: true }))
 app.use(cors())
 app.disable('x-powered-by')
 
-app.use(express.static(path.join(__dirname, '..', 'client')))
+app.use(express.static(path.join(__dirname, '..', process.env.CLIENT_FOLDER)))
 app.use('/api', api)
 app.get('*', (req, res) => {
   res.sendFile(path.resolve(__dirname, '..', 'client', 'index.html'))
