@@ -7,7 +7,7 @@
   "sampleUrl": "https://livelihood-zones-api.herokuapp.com/api",
   "header": {
     "title": "Livelihood Zones API",
-    "filename": "client/header.md"
+    "filename": "client/docs/header.md"
   },
   "template": {
     "withCompare": false,
