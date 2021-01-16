@@ -12,6 +12,17 @@ app.use(express.urlencoded({ extended: true }))
 app.use(cors())
 app.disable('x-powered-by')
 
+// Redirect http to https on heroku
+if (process.env.IS_HEROKU_APP) {
+  app.use((req, res, next) => {
+    if (req.header('x-forwarded-proto') !== 'https') {
+      res.redirect(`https://${req.headers.host}${req.baseUrl}`)
+    } else {
+      next()
+    }
+  })
+}
+
 app.use(express.static(path.join(__dirname, '..', 'client')))
 app.use('/api', api)
 app.get('*', (req, res) => {
