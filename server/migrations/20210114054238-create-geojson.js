@@ -2,13 +2,13 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable('GeoJsons', {
-      ogc_fid: {
+      gid: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      wkb_geometry: {
+      geom: {
         type: Sequelize.GEOMETRY
       },
       adm3_en: {

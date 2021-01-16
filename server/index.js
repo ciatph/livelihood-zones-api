@@ -12,12 +12,12 @@ app.use(express.urlencoded({ extended: true }))
 app.use(cors())
 app.disable('x-powered-by')
 
-app.use(express.static(path.join(__dirname, '..', process.env.CLIENT_FOLDER)))
+app.use(express.static(path.join(__dirname, '..', 'client')))
 app.use('/api', api)
 app.get('*', (req, res) => {
   res.sendFile(path.resolve(__dirname, '..', 'client', 'index.html'))
 })
 
 app.listen(PORT, () => {
-  console.log(`listening on http://localhost:${PORT}/api/ping`)
+  console.log(`listening on http://localhost:${PORT}`)
 })

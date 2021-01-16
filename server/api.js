@@ -30,4 +30,17 @@ router.get('/ping', Utils.ping)
  */
 router.get('/province', validation.search, GeoJsons.getProvince)
 
+/**
+ * @api {get} /municipality Get municipality GeoJSON
+ * @apiName GetMunicipality
+ * @apiGroup GeoJSON
+ *
+ * @apiSampleRequest off
+ * @apiParam {String} name Municipality name.
+ * @apiParam {String} province Province name.
+ * @apiSuccess {JSON} - GeoJSON data of the municipality.
+ * @apiError {Object} 400 GET name and/or provnice query parameters failed the input validation.
+ */
+router.get('/municipality', validation.search, GeoJsons.getMunicipality)
+
 module.exports = router

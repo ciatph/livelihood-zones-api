@@ -15,8 +15,13 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   GeoJson.init({
-    ogc_fid: DataTypes.INTEGER,
-    wkb_geometry: DataTypes.GEOMETRY,
+    gid: {
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true,
+      type: DataTypes.INTEGER
+    },
+    geom: DataTypes.GEOMETRY,
     adm3_en: DataTypes.STRING,
     adm2_en: {
       type: DataTypes.STRING,

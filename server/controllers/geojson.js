@@ -1,8 +1,8 @@
 require('dotenv').config()
-const moment = require('moment')
 const model = require('../models')
 const { GeoJson } = model
 const { RES } = require('../helpers/defines')
+const { capitalize } = require('../helpers/utils')
 
 class GeoJsons {
   constructor() {}
@@ -13,7 +13,7 @@ class GeoJsons {
    * @param {*} res
    */
   static async getProvince(req, res) {
-    const { name } = req.query
+    let { name } = req.query
     const id = process.env.GEO_PRIMARY_KEY
     const geom = process.env.GEO_COLUMN
     const table = process.env.GEO_TABLE
@@ -37,7 +37,7 @@ class GeoJsons {
             AND adm2_en != '' AND adm3_en != '') inputs) features`
 
       data = await GeoJson.sequelize.query(queryString, {
-        replacements: { PROVINCE_NAME: `${name}%` },
+        replacements: { PROVINCE_NAME: `${capitalize(name)}%` },
         type: model.sequelize.QueryTypes.SELECT
       })
     } catch (err) {
@@ -47,6 +47,29 @@ class GeoJsons {
     }
 
     return res.json(data[0].jsonb_build_object)
+  }
+
+  /**
+   * Return the GeoJSON of a municipality
+   * @param {*} req
+   * @param {*} res
+   */
+  static async getMunicipality(req, res) {
+    const { province, name } = req.query
+    let data
+
+    try {
+      data = await GeoJson.findOne({
+        attributes: ['geom'],
+        where: { adm2_en: capitalize(province), adm3_en: capitalize(name) }
+      })
+    } catch (err) {
+      return res.status(RES.INTERNAL_SERVER_ERROR).send({
+        message: err.message
+      })
+    }
+
+    res.json(data ? data.dataValues.geom : {})
   }
 }
 
