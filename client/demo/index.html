@@ -9,11 +9,18 @@
       font-family: Arial, Helvetica, sans-serif;
     }
 
-    #output {
+    #output, #query {
       width: 100%;
       min-height: 100px;
       font-size: 14px;
       font-family: 'Courier New', Courier, monospace;
+      border: 1px solid;
+    }
+
+    #query {
+      width: 800px;
+      min-height: 20px;
+      padding: 8px;
     }
   </style>
   <script src="axios.min.js" type="text/javascript"></script>
@@ -22,14 +29,32 @@
     let output
     let button
     let download
+    let query
+    const apiUrl = `${window.document.location.origin}/api/province`
 
     function init() {
       province = document.getElementById('province')
       output = document.getElementById('output')
       button = document.getElementById('click')
+      query = document.getElementById('query')
+      download = document.getElementById('download')
 
       province.addEventListener('click', function(e) {
         output.innerText = ''
+      })
+
+      province.addEventListener('keyup', function(e) {
+        query.innerText = `${apiUrl}?name=${province.value}`
+
+        const dl = document.getElementById('download')
+        if (dl.checked) {
+          query.innerText += '&download=true'
+        }
+      })
+
+      download.addEventListener('click', function(e) {
+        const checked = (e.target.checked) ? `&file=${e.target.checked}` : ''
+        query.innerText = `${apiUrl}?name=${province.value}${checked}`
       })
     }
 
@@ -53,7 +78,6 @@
           output.innerText = 'finished file download.'
         }).catch(err => {
           output.innerText = err.message
-          alert(err.message)
         })
       } else {
         // Display GeoJSON
@@ -62,7 +86,6 @@
         }).then(response => {
           output.innerText = JSON.stringify(response.data)
         }).catch(err => {
-          alert(err.message)
           output.innerText = err.message
         })
       }
@@ -80,6 +103,10 @@
   <br />
   <br />
 
+  <h4>Query</h4>
+  <div id="query"></div>
+
+  <h4>Output</h4>
   <div id="output"></div>
 </body>
 </html>
