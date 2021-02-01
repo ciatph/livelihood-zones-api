@@ -19,39 +19,52 @@ const validation = require('./middleware/validation-middleware')
 router.get('/ping', Utils.ping)
 
 /**
- * @api {get} /province Get province GeoJSON
+ * @api {get} /province Get province
  * @apiName GetProvince
  * @apiGroup GeoJSON
+ * @apiDescription Get the GeoJSON `FeatureCollection` object of a province including its municipalities, each with its individual `features`.
  *
  * @apiSampleRequest off
  * @apiParam {String} name Province name.
- * @apiParam {Boolean} file (Optional) Download the response as a JSON file.
+ * @apiParam {Boolean} [file] Download the response as a JSON file.
  *
- * @apiSuccess {Object} crs Coordinate reference system (CRS) or spatial reference system (SRS)
- * @apiSuccess {String} type Type of geometry.
- * @apiSuccess {Array[]} coordinates Multidimensional array of points that define a geometric shape.
- * @apiSuccess {File} - GeoJSON file of the province including its municipalities if `file=true`.
+ * @apiSuccess {String} type GeoJSON type.
+ * @apiSuccess {Object[]} features List of municipality features.
+ * @apiSuccess {Number} features.id Unique identification number.
+ * @apiSuccess {String} features.type Feature
+ * @apiSuccess {Object} features.geometry Geometry definition.
+ * @apiSuccess {String} features.geometry.type Geometry type.
+ * @apiSuccess {Array[]} features.geometry.coordinates Multidimensional array of two-dimensional locations (points) in longitude and latitude that define a geometric shape.
+ * @apiSuccess {Object} features.properties Additional information (shapefile column attributes).
+ * @apiSuccess {String} features.properties.adm2_en Province name.
+ * @apiSuccess {String} features.properties.adm3_en Municipality name.
+ * @apiSuccess {String} features.properties.livelihood Livelihood zone.
+ * @apiSuccess {File} - JSON file of the province including its municipalities if `file=true`.
  *
- * @apiError {Object} 400 Province name query parameter failed the input validation.
+ * @apiError {Object} 400 Province `name` or `file` query parameters failed the input validation.
  */
 router.get('/province', validation.search, GeoJsons.getProvince)
 
 /**
- * @api {get} /municipality Get municipality GeoJSON
+ * @api {get} /municipality Get municipality
+ * @apiDescription Get the GeoJSON geometry object of municipality.
  * @apiName GetMunicipality
  * @apiGroup GeoJSON
  *
  * @apiSampleRequest off
  * @apiParam {String} province Province name.
  * @apiParam {String} municipality Municipality name.
- * @apiParam {Boolean} file (Optional) Download the response as a JSON file.
+ * @apiParam {Boolean} [file] Download the response as a JSON file.
  *
- * @apiSuccess {Object} crs Coordinate reference system (CRS) or spatial reference system (SRS)
+ * @apiSuccess {Object} crs Coordinate reference system (CRS) or spatial reference system (SRS).
+ * @apiSuccess {String} crs.type CRS type.
+ * @apiSuccess {Object} crs.properties CRS information object.
+ * @apiSuccess {String} crs.properties.name CRS Name.
  * @apiSuccess {String} type Type of geometry.
- * @apiSuccess {Array[]} coordinates Multidimensional array of points that define a geometric shape.
- * @apiSuccess {File} - GeoJSON file of the province including its municipalities if `file=true`.
+ * @apiSuccess {Array[]} coordinates Multidimensional array of two-dimensional locations (points) in longitude and latitude that define a geometric shape.
+ * @apiSuccess {File} - JSON file of the province including its municipalities if `file=true`.
  *
- * @apiError {Object} 400 GET name and/or provnice query parameters failed the input validation.
+ * @apiError {Object} 400 `municipality`, `provnice` or `file` query parameters failed the input validation.
  */
 router.get('/municipality', validation.search, GeoJsons.getMunicipality)
 
