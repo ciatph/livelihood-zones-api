@@ -21,6 +21,7 @@
     let province
     let output
     let button
+    let download
 
     function init() {
       province = document.getElementById('province')
@@ -33,14 +34,38 @@
     }
 
     function get() {  
-      output.innerText = ''
-      axios.get(`${window.document.location.origin}/api/province`, {
-        params: { name: province.value }
-      }).then(response => {
-        output.innerText = JSON.stringify(response.data)
-      }).catch(err => {
-        alert(err.message)
-      })
+      output.innerText = 'loading...'
+      download = document.getElementById('download')
+
+      if (download.checked) {
+        // File download
+        axios.get(`${window.document.location.origin}/api/province`, {
+          params: { name: province.value, file: true },
+          responseType: 'blob'
+        }).then(({ data }) => {
+          const downloadURL = window.URL.createObjectURL(new Blob([data]))
+          const link = document.createElement('a')
+          link.href = downloadURL
+          link.setAttribute('download', 'livelihood_zone.json')
+          document.body.appendChild(link)
+          link.click()
+          link.remove()
+          output.innerText = 'finished file download.'
+        }).catch(err => {
+          output.innerText = err.message
+          alert(err.message)
+        })
+      } else {
+        // Display GeoJSON
+        axios.get(`${window.document.location.origin}/api/province`, {
+          params: { name: province.value }
+        }).then(response => {
+          output.innerText = JSON.stringify(response.data)
+        }).catch(err => {
+          alert(err.message)
+          output.innerText = err.message
+        })
+      }
     }
   </script>
 </head>
@@ -50,6 +75,11 @@
   <button id="click" onclick="get()">Send</button>
   <br />
   <br />
+
+  <input type="checkbox" id="download" /> Download as File
+  <br />
+  <br />
+
   <div id="output"></div>
 </body>
 </html>

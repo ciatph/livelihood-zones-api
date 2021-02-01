@@ -2,7 +2,7 @@ require('dotenv').config()
 const model = require('../models')
 const { GeoJson } = model
 const { RES } = require('../helpers/defines')
-const { capitalize } = require('../helpers/utils')
+const { capitalize, filedownload } = require('../helpers/utils')
 
 class GeoJsons {
   constructor() {}
@@ -13,7 +13,7 @@ class GeoJsons {
    * @param {*} res
    */
   static async getProvince(req, res) {
-    let { name } = req.query
+    let { name, file } = req.query
     const id = process.env.GEO_PRIMARY_KEY
     const geom = process.env.GEO_COLUMN
     const table = process.env.GEO_TABLE
@@ -46,7 +46,13 @@ class GeoJsons {
       })
     }
 
-    return res.json(data[0].jsonb_build_object)
+    if (file) {
+      // Return a GeoJSON file for download
+      filedownload(res, name, data[0].jsonb_build_object)
+    } else {
+      // Return a GeoJSON response object
+      return res.json(data[0].jsonb_build_object)
+    }
   }
 
   /**
@@ -55,13 +61,13 @@ class GeoJsons {
    * @param {*} res
    */
   static async getMunicipality(req, res) {
-    const { province, name } = req.query
+    const { province, municipality, file } = req.query
     let data
 
     try {
       data = await GeoJson.findOne({
         attributes: ['geom'],
-        where: { adm2_en: capitalize(province), adm3_en: capitalize(name) }
+        where: { adm2_en: capitalize(province), adm3_en: capitalize(municipality) }
       })
     } catch (err) {
       return res.status(RES.INTERNAL_SERVER_ERROR).send({
@@ -69,7 +75,14 @@ class GeoJsons {
       })
     }
 
-    res.json(data ? data.dataValues.geom : {})
+    if (file) {
+      // Return a GeoJSON file for download
+      const name = `${province}_${municipality}`.replace(/ /g, '')
+      filedownload(res, name, data ? data.dataValues.geom : {})
+    } else {
+      // Return a GeoJSON response object
+      res.json(data ? data.dataValues.geom : {})
+    }
   }
 }
 
