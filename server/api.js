@@ -25,7 +25,13 @@ router.get('/ping', Utils.ping)
  *
  * @apiSampleRequest off
  * @apiParam {String} name Province name.
- * @apiSuccess {JSON} - GeoJSON data of the province including its municipalities.
+ * @apiParam {Boolean} file (Optional) Download the response as a JSON file.
+ *
+ * @apiSuccess {Object} crs Coordinate reference system (CRS) or spatial reference system (SRS)
+ * @apiSuccess {String} type Type of geometry.
+ * @apiSuccess {Array[]} coordinates Multidimensional array of points that define a geometric shape.
+ * @apiSuccess {File} - GeoJSON file of the province including its municipalities if `file=true`.
+ *
  * @apiError {Object} 400 Province name query parameter failed the input validation.
  */
 router.get('/province', validation.search, GeoJsons.getProvince)
@@ -36,9 +42,15 @@ router.get('/province', validation.search, GeoJsons.getProvince)
  * @apiGroup GeoJSON
  *
  * @apiSampleRequest off
- * @apiParam {String} name Municipality name.
  * @apiParam {String} province Province name.
- * @apiSuccess {JSON} - GeoJSON data of the municipality.
+ * @apiParam {String} municipality Municipality name.
+ * @apiParam {Boolean} file (Optional) Download the response as a JSON file.
+ *
+ * @apiSuccess {Object} crs Coordinate reference system (CRS) or spatial reference system (SRS)
+ * @apiSuccess {String} type Type of geometry.
+ * @apiSuccess {Array[]} coordinates Multidimensional array of points that define a geometric shape.
+ * @apiSuccess {File} - GeoJSON file of the province including its municipalities if `file=true`.
+ *
  * @apiError {Object} 400 GET name and/or provnice query parameters failed the input validation.
  */
 router.get('/municipality', validation.search, GeoJsons.getMunicipality)
