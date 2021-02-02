@@ -34,19 +34,21 @@ function init() {
     query.innerText = `${apiUrl}?name=${province.value}${checked}`
   })
 
-  // Initialize map
-  map = L.map('map').setView([12.419614853889797, 120.77551644707285], 6)
-  mapLayer = new L.LayerGroup()
-  mapLayer.addTo(map)
+  setTimeout(() => {
+    // Initialize map
+    map = L.map('map').setView([12.419614853889797, 120.77551644707285], 6)
+    mapLayer = new L.LayerGroup()
+    mapLayer.addTo(map)
 
-  L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-      attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-      maxZoom: 18,
-      id: 'mapbox/streets-v11',
-      tileSize: 512,
-      zoomOffset: -1,
-      accessToken: 'pk.eyJ1IjoiY2lhdHBoIiwiYSI6ImNqNXcyeTNhcTA5MzEycHFpdG90enFxMG8ifQ.gwZ6uo6pvx4-RZ1lHODcBQ'
-  }).addTo(map)    
+    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        maxZoom: 18,
+        id: 'mapbox/streets-v11',
+        tileSize: 512,
+        zoomOffset: -1,
+        accessToken: 'pk.eyJ1IjoiY2lhdHBoIiwiYSI6ImNqNXcyeTNhcTA5MzEycHFpdG90enFxMG8ifQ.gwZ6uo6pvx4-RZ1lHODcBQ'
+    }).addTo(map)
+  }, 1000)
 }
 
 function get() {  
