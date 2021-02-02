@@ -46,12 +46,18 @@ class GeoJsons {
       })
     }
 
-    if (file) {
-      // Return a GeoJSON file for download
-      filedownload(res, name, data[0].jsonb_build_object)
+    if (!data[0].jsonb_build_object.features) {
+      return res.status(RES.NOT_FOUND).send({
+        message: 'Province not found.'
+      })
     } else {
-      // Return a GeoJSON response object
-      return res.json(data[0].jsonb_build_object)
+      if (file) {
+        // Return a GeoJSON file for download
+        filedownload(res, name, data[0].jsonb_build_object)
+      } else {
+        // Return a GeoJSON response object
+        return res.json(data[0].jsonb_build_object)
+      }
     }
   }
 
@@ -75,13 +81,19 @@ class GeoJsons {
       })
     }
 
-    if (file) {
-      // Return a GeoJSON file for download
-      const name = `${province}_${municipality}`.replace(/ /g, '')
-      filedownload(res, name, data ? data.dataValues.geom : {})
+    if (!data) {
+      return res.status(RES.NOT_FOUND).send({
+        message: 'Municipality not found.'
+      })
     } else {
-      // Return a GeoJSON response object
-      res.json(data ? data.dataValues.geom : {})
+      if (file) {
+        // Return a GeoJSON file for download
+        const name = `${province}_${municipality}`.replace(/ /g, '')
+        filedownload(res, name, data ? data.dataValues.geom : {})
+      } else {
+        // Return a GeoJSON response object
+        res.json(data ? data.dataValues.geom : {})
+      }
     }
   }
 }

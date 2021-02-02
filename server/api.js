@@ -41,7 +41,9 @@ router.get('/ping', Utils.ping)
  * @apiSuccess {String} features.properties.livelihood Livelihood zone.
  * @apiSuccess {File} - JSON file of the province including its municipalities if `file=true`.
  *
- * @apiError {Object} 400 Province `name` or `file` query parameters failed the input validation.
+ * @apiError (Error 4xx) {Error} 400 Query parameter validation has failed.
+ * @apiError (Error 4xx) {Error} 404 The province was not found.
+ * @apiError (Error 5xx) {Error} 500 Internal server error.
  */
 router.get('/province', validation.search, GeoJsons.getProvince)
 
@@ -64,7 +66,9 @@ router.get('/province', validation.search, GeoJsons.getProvince)
  * @apiSuccess {Array[]} coordinates Multidimensional array of two-dimensional locations (points) in longitude and latitude that define a geometric shape.
  * @apiSuccess {File} - JSON file of the province including its municipalities if `file=true`.
  *
- * @apiError {Object} 400 `municipality`, `provnice` or `file` query parameters failed the input validation.
+ * @apiError (Error 4xx) {Error} 400 Query parameter validation has failed.
+ * @apiError (Error 4xx) {Error} 404 The municipality was not found.
+ * @apiError (Error 5xx) {Error} 500 Internal server error.
  */
 router.get('/municipality', validation.search, GeoJsons.getMunicipality)
 
