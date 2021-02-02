@@ -3,10 +3,16 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Livelihood Zones API - Test</title>
+  <title>Livelihood Zones API</title>
+  <!-- leafletjs -->
+  <link rel="stylesheet" href="leaflet.css">
   <style type="text/css">
     body, html {
       font-family: Arial, Helvetica, sans-serif;
+    }
+
+    #province {
+      width: 300px;
     }
 
     #output, #query {
@@ -22,91 +28,44 @@
       min-height: 20px;
       padding: 8px;
     }
+
+    #map {
+      height: 400px;
+      width: 800px;
+      padding: 8px;
+      border: 1px solid;
+    }
   </style>
+
+  <script src="leaflet.js" type="text/javascript"></script>
   <script src="axios.min.js" type="text/javascript"></script>
-  <script type="text/javascript">
-    let province
-    let output
-    let button
-    let download
-    let query
-    const apiUrl = `${window.document.location.origin}/api/province`
-
-    function init() {
-      province = document.getElementById('province')
-      output = document.getElementById('output')
-      button = document.getElementById('click')
-      query = document.getElementById('query')
-      download = document.getElementById('download')
-
-      province.addEventListener('click', function(e) {
-        output.innerText = ''
-      })
-
-      province.addEventListener('keyup', function(e) {
-        query.innerText = `${apiUrl}?name=${province.value}`
-
-        const dl = document.getElementById('download')
-        if (dl.checked) {
-          query.innerText += '&download=true'
-        }
-      })
-
-      download.addEventListener('click', function(e) {
-        const checked = (e.target.checked) ? `&file=${e.target.checked}` : ''
-        query.innerText = `${apiUrl}?name=${province.value}${checked}`
-      })
-    }
-
-    function get() {  
-      output.innerText = 'loading...'
-      download = document.getElementById('download')
-
-      if (download.checked) {
-        // File download
-        axios.get(`${window.document.location.origin}/api/province`, {
-          params: { name: province.value, file: true },
-          responseType: 'blob'
-        }).then(({ data }) => {
-          const downloadURL = window.URL.createObjectURL(new Blob([data]))
-          const link = document.createElement('a')
-          link.href = downloadURL
-          link.setAttribute('download', 'livelihood_zone.json')
-          document.body.appendChild(link)
-          link.click()
-          link.remove()
-          output.innerText = 'finished file download.'
-        }).catch(err => {
-          output.innerText = err.message
-        })
-      } else {
-        // Display GeoJSON
-        axios.get(`${window.document.location.origin}/api/province`, {
-          params: { name: province.value }
-        }).then(response => {
-          output.innerText = JSON.stringify(response.data)
-        }).catch(err => {
-          output.innerText = err.message
-        })
-      }
-    }
-  </script>
+  <script src="main.js" type="text/javascript"></script>
 </head>
 <body onload="init()">
-  <h2>Livelihood Zones API - Test</h2>
-  <input type="text" id="province" placeholder="Enter province name" />
+  <h2>Livelihood Zones API - GET Province</h2>
+
+  <!-- Province input -->
+  <input type="text" id="province" placeholder="Enter province name (i.e., rizal)" />
   <button id="click" onclick="get()">Send</button>
   <br />
   <br />
 
+  <!-- File download -->
   <input type="checkbox" id="download" /> Download as File
   <br />
   <br />
 
+  <!-- Query URL -->
   <h4>Query</h4>
   <div id="query"></div>
+  <br />
 
-  <h4>Output</h4>
+  <!-- Map -->
+  <h4>Map</h4>
+  <div id="map"></div>
+
+  <!-- Output logs -->
+  <h4>GeoJSON Output / Logs</h4>
   <div id="output"></div>
 </body>
 </html>
