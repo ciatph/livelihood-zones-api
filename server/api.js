@@ -49,7 +49,7 @@ router.get('/province', validation.search, GeoJsons.getProvince)
 
 /**
  * @api {get} /municipality Get municipality
- * @apiDescription Get the GeoJSON geometry object of municipality.
+ * @apiDescription Get the GeoJSON `Feature` object of a municipality.
  * @apiName GetMunicipality
  * @apiGroup GeoJSON
  *
@@ -58,12 +58,11 @@ router.get('/province', validation.search, GeoJsons.getProvince)
  * @apiParam {String} municipality Municipality name.
  * @apiParam {Boolean} [file] Download the response as a JSON file.
  *
- * @apiSuccess {Object} crs Coordinate reference system (CRS) or spatial reference system (SRS).
- * @apiSuccess {String} crs.type CRS type.
- * @apiSuccess {Object} crs.properties CRS information object.
- * @apiSuccess {String} crs.properties.name CRS Name.
- * @apiSuccess {String} type Type of geometry.
- * @apiSuccess {Array[]} coordinates Multidimensional array of two-dimensional locations (points) in longitude and latitude that define a geometric shape.
+ * @apiSuccess {String} type GeoJSON type.
+ * @apiSuccess {Object} features.geometry Geometry definition.
+ * @apiSuccess {String} features.geometry.type Geometry type.
+ * @apiSuccess {Array[]} features.geometry.coordinates Multidimensional array of two-dimensional locations (points) in longitude and latitude that define a geometric shape.
+ * @apiSuccess {Object} properties One or more name-value pairs (from a shapefile Attributes table).
  * @apiSuccess {File} - JSON file of the province including its municipalities if `file=true`.
  *
  * @apiError (Error 4xx) {Error} 400 Query parameter validation has failed.

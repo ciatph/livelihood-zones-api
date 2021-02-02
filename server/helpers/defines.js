@@ -1,3 +1,11 @@
+require('dotenv').config()
+
+const POSTGIS = {
+  ID: process.env.GEO_PRIMARY_KEY,
+  GEOM_COLUMN: process.env.GEO_COLUMN,
+  TABLE: process.env.GEO_TABLE
+}
+
 const RES = {
   OKAY: 200,
   NOT_MODIFIED: 304,
@@ -22,5 +30,6 @@ const MAX_LENGTH = {
 
 module.exports = {
   RES,
-  MAX_LENGTH
+  MAX_LENGTH,
+  POSTGIS
 }
