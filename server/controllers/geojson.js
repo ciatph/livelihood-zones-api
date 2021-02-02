@@ -64,7 +64,7 @@ class GeoJsons {
    */
   static async getMunicipality(req, res) {
     const { province, municipality, file } = req.query
-    let data
+    let data = []
 
     try {
       const queryString = `
@@ -91,7 +91,7 @@ class GeoJsons {
       })
     }
 
-    if (!data) {
+    if (data.length === 0) {
       return res.status(RES.NOT_FOUND).send({
         message: 'Municipality not found.'
       })
