@@ -1,7 +1,6 @@
-require('dotenv').config()
 const model = require('../models')
 const { GeoJson } = model
-const { RES } = require('../helpers/defines')
+const { RES, POSTGIS } = require('../helpers/defines')
 const { capitalize, filedownload } = require('../helpers/utils')
 
 class GeoJsons {
@@ -14,9 +13,6 @@ class GeoJsons {
    */
   static async getProvince(req, res) {
     let { name, file } = req.query
-    const id = process.env.GEO_PRIMARY_KEY
-    const geom = process.env.GEO_COLUMN
-    const table = process.env.GEO_TABLE
     let data
 
     try {
@@ -28,11 +24,11 @@ class GeoJsons {
         FROM (
           SELECT jsonb_build_object(
             'type',       'Feature',
-            'id',         ${id},
-            'geometry',   ST_AsGeoJSON(${geom})::jsonb,
-            'properties', to_jsonb(inputs) - '${id}' - '${geom}'
+            'id',         ${POSTGIS.ID},
+            'geometry',   ST_AsGeoJSON(${POSTGIS.GEOM_COLUMN})::jsonb,
+            'properties', to_jsonb(inputs) - '${POSTGIS.ID}' - '${POSTGIS.GEOM_COLUMN}'
           ) AS feature
-          FROM (SELECT * FROM ${table}
+          FROM (SELECT * FROM ${POSTGIS.TABLE}
             WHERE adm2_en like :PROVINCE_NAME
             AND adm2_en != '' AND adm3_en != '') inputs) features`
 
@@ -71,9 +67,23 @@ class GeoJsons {
     let data
 
     try {
-      data = await GeoJson.findOne({
-        attributes: ['geom'],
-        where: { adm2_en: capitalize(province), adm3_en: capitalize(municipality) }
+      const queryString = `
+        SELECT jsonb_build_object(
+          'type',       'Feature',
+          'geometry',   ST_AsGeoJSON(${POSTGIS.GEOM_COLUMN})::jsonb,
+          'properties', to_jsonb(inputs) - '${POSTGIS.ID}' - '${POSTGIS.GEOM_COLUMN}'
+        ) AS feature
+        FROM (SELECT * FROM ${POSTGIS.TABLE}
+          WHERE adm2_en like :PROVINCE_NAME
+          AND adm3_en like :MUNICIPALITY_NAME
+          AND adm2_en != '' AND adm3_en != '') inputs`
+
+      data = await GeoJson.sequelize.query(queryString, {
+        replacements: {
+          PROVINCE_NAME: `${capitalize(province)}%`,
+          MUNICIPALITY_NAME: `${capitalize(municipality)}%`
+        },
+        type: model.sequelize.QueryTypes.SELECT
       })
     } catch (err) {
       return res.status(RES.INTERNAL_SERVER_ERROR).send({
@@ -89,10 +99,10 @@ class GeoJsons {
       if (file) {
         // Return a GeoJSON file for download
         const name = `${province}_${municipality}`.replace(/ /g, '')
-        filedownload(res, name, data ? data.dataValues.geom : {})
+        filedownload(res, name, data ? data[0].feature : {})
       } else {
         // Return a GeoJSON response object
-        res.json(data ? data.dataValues.geom : {})
+        res.json(data ? data[0].feature : {})
       }
     }
   }
