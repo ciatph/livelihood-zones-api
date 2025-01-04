@@ -1,6 +1,8 @@
 ## livelihood-zones-api
 
 > GeoJSON API for the livelihood zones map.
+> 
+> This code repository aims to provide a benchmark and a decisive answer to the team's inquiry of endorsing using **MapBox** or a **combination of PostgreSQL + PostGIS** extension in a custom server by assessing the performance and capabilities of serving the [Livelihood Zones'](https://ciatph.github.io/#/maps-livelihood) GeoJSON from a service running a PostGIS-enabled Postgres database.
 
 ### Content
 
